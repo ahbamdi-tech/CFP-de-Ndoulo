@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123b35"><meta name="description" content="Assistant personnel de direction du CFP de Ndoulo">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg">
+<title>CFP Ndoulo Manager</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-mark">ND</div><div><b>CFP NDOULO</b><small>MANAGER · DIRECTION</small></div></div>
+  <div class="side-label">ESPACE DIRECTEUR</div>
+  <button class="nav active" data-view="dashboard">▦ <span>Tableau de bord</span></button>
+  <button class="nav" data-view="courriers">✉ <span>Courriers & instructions</span><i id="navPending">0</i></button>
+  <button class="nav" data-view="journal">✎ <span>Journal de direction</span></button>
+  <button class="nav" data-view="finances">₣ <span>Finances</span></button>
+  <button class="nav" data-view="personnel">♙ <span>Personnel</span></button>
+  <button class="nav" data-view="effectifs">▤ <span>Effectifs apprenants</span></button>
+  <button class="nav" data-view="pedagogie">▣ <span>Suivi pédagogique</span></button>
+  <button class="nav" data-view="agenda">◷ <span>Agenda & rappels</span></button>
+  <button class="nav" data-view="rapports">▥ <span>Rapports</span></button>
+  <div class="sidebar-bottom"><div class="secure">● Accès directeur uniquement</div><small>Version 2 · Données sur cet appareil</small></div>
+</aside>
+<main class="main">
+<header class="topbar"><div><div class="eyebrow">CENTRE DE FORMATION PROFESSIONNELLE</div><h1 id="pageTitle">Tableau de bord</h1></div><div class="top-actions"><span class="date-chip" id="today"></span><button class="avatar" title="Espace directeur">D</button></div></header>
+<section id="view-dashboard" class="view active">
+  <div class="welcome"><div><span class="eyebrow light">VOTRE ASSISTANT DE DIRECTION</span><h2>Bonjour, Monsieur le Directeur.</h2><p>Voici les points à surveiller pour piloter le CFP aujourd'hui.</p></div><div class="welcome-icon">✦</div></div>
+  <div class="section-head"><div><h3>Briefing du matin</h3><p id="briefDate"></p></div><button class="btn btn-light" id="refreshBrief">Actualiser ↻</button></div>
+  <div class="stats" id="stats"></div>
+  <div class="dashboard-grid">
+    <article class="panel"><div class="panel-head"><div><h3>À traiter en priorité</h3><p>Délais, courriers et engagements</p></div><span class="pill amber">Priorités</span></div><div id="urgentList" class="item-list"></div></article>
+    <article class="panel"><div class="panel-head"><div><h3>Votre journée</h3><p>Rendez-vous et rappels</p></div><button class="text-btn" data-go="agenda">Voir l'agenda →</button></div><div id="todayList" class="item-list"></div></article>
+  </div>
+  <div class="dashboard-grid lower">
+    <article class="panel"><div class="panel-head"><div><h3>Dernières activités</h3><p>Votre journal de direction</p></div><button class="text-btn" data-go="journal">Consulter →</button></div><div id="activityList" class="item-list"></div></article>
+    <article class="panel wellbeing"><div class="panel-head"><div><h3>Votre bien-être</h3><span class="pill green">Pause déjeuner · 12 h 30</span></div><span class="heart">♡</span></div><p class="wellbeing-question">Monsieur le Directeur, avez-vous pris le temps de déjeuner ?</p><div class="choice-row"><button class="btn btn-green" data-meal="yes">Oui, j'ai mangé</button><button class="btn btn-outline" data-meal="no">Pas encore</button></div><p class="tiny" id="mealStatus">Un rappel bienveillant, sans jugement.</p></article>
+  </div>
+</section>
+<section id="view-courriers" class="view">
+  <div class="intro-row"><div><h2>Courriers & instructions</h2><p>Déposez un document. L'application vous aide à en préparer le traitement.</p></div><button class="btn btn-primary" id="newMail">＋ Nouveau courrier</button></div>
+  <div class="notice"><b>Principe de validation :</b> aucune instruction ni aucun courriel n'est envoyé sans votre décision. L'analyse proposée reste à vérifier.</div>
+  <div class="filters"><button class="filter active" data-filter="all">Tous</button><button class="filter" data-filter="urgent">Urgents</button><button class="filter" data-filter="pending">En attente</button><button class="filter" data-filter="done">Traités</button></div>
+  <div id="mailList" class="mail-list"></div>
+</section>
+<section id="view-journal" class="view">
+ <div class="intro-row"><div><h2>Journal de direction</h2><p>Consignez vos décisions, instructions, appels, réunions et actions.</p></div></div>
+ <article class="panel"><h3>Ajouter une activité</h3><form id="journalForm" class="form-grid"><label class="span2">Ce que vous avez fait ou décidé<textarea id="journalText" required placeholder="Ex. : J'ai demandé au chef des travaux de transmettre la situation des progressions avant vendredi."></textarea></label><label>Catégorie<select id="journalType"><option>Instruction</option><option>Décision</option><option>Réunion</option><option>Appel / échange</option><option>Action réalisée</option><option>Autre</option></select></label><label>Personne concernée<input id="journalPerson" placeholder="Nom ou fonction"></label><label>Échéance éventuelle<input id="journalDue" type="date"></label><div class="form-actions"><button class="btn btn-primary">Enregistrer dans mon journal</button></div></form></article>
+ <article class="panel"><div class="panel-head"><div><h3>Historique des activités</h3><p>Les informations que vous avez consignées</p></div><button class="btn btn-light" id="exportJournal">Exporter</button></div><div id="journalList" class="item-list"></div></article>
+</section>
+
+<section id="view-finances" class="view">
+ <div class="intro-row"><div><h2>Suivi financier</h2><p>Enregistrement des recettes, dépenses, dépôts et suivi des enveloppes disponibles.</p></div><button class="btn btn-primary" id="addFinance">＋ Saisir une opération</button></div>
+ <div class="notice"><b>Règles de gestion :</b> les dépenses ordinaires sont enregistrées après paiement ; toute dépense supérieure à 15 000 FCFA est soumise à autorisation préalable ; les urgences hors rubrique peuvent être engagées par la gestionnaire, avec justification immédiate au directeur.</div>
+ <div class="stats" id="financeStats"></div>
+ <div class="dashboard-grid">
+  <article class="panel"><div class="panel-head"><div><h3>Enveloppes disponibles par rubrique</h3><p>Chaque recette alimente automatiquement les rubriques selon les taux définis.</p></div><button class="text-btn" id="addBudget">＋ Rubriques et taux</button></div><div class="table-wrap"><table><thead><tr><th>Rubrique</th><th>Alimenté</th><th>Dépensé</th><th>Disponible</th></tr></thead><tbody id="budgetTable"></tbody></table></div></article>
+  <article class="panel"><div class="panel-head"><div><h3>Banque & inscriptions</h3><p>Encaissements et versements</p></div></div><div id="bankSummary" class="item-list"></div></article>
+ </div>
+ <article class="panel"><div class="panel-head"><div><h3>Dernières opérations</h3><p>Historique financier</p></div><button class="btn btn-light" id="exportFinance">Exporter CSV</button></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Opération</th><th>Rubrique / motif</th><th>Montant</th><th>Statut</th><th></th></tr></thead><tbody id="financeTable"></tbody></table></div></article>
+ <article class="panel"><div class="panel-head"><div><h3>À examiner par le directeur</h3><p>Autorisations et justifications attendues</p></div><span class="pill amber">Contrôle</span></div><div id="financeAlerts" class="item-list"></div></article>
+</section>
+
+<section id="view-personnel" class="view">
+ <div class="intro-row"><div><h2>Personnel</h2><p>Un répertoire administratif pour répondre rapidement aux demandes de la hiérarchie.</p></div><button class="btn btn-primary" id="addStaff">＋ Ajouter un agent</button></div>
+ <div class="notice">Renseignez uniquement les données professionnelles nécessaires. Les champs peuvent être complétés progressivement.</div>
+ <div class="stats compact" id="staffStats"></div><article class="panel"><div class="table-wrap"><table><thead><tr><th>Nom et prénom</th><th>Fonction / spécialité</th><th>Corps / grade</th><th>Contact</th><th></th></tr></thead><tbody id="staffTable"></tbody></table></div></article>
+</section>
+<section id="view-effectifs" class="view">
+ <div class="intro-row"><div><h2>Effectifs des apprenants</h2><p>Pour le pilotage, privilégiez les statistiques par filière, niveau et sexe.</p></div><button class="btn btn-primary" id="addEnrollment">＋ Saisir un effectif</button></div>
+ <div class="stats compact" id="learnerStats"></div><article class="panel"><h3>Répartition des effectifs</h3><div class="table-wrap"><table><thead><tr><th>Filière</th><th>Niveau</th><th>Filles / femmes</th><th>Garçons / hommes</th><th>Total</th><th></th></tr></thead><tbody id="enrollmentTable"></tbody></table></div></article>
+</section>
+<section id="view-pedagogie" class="view">
+ <div class="intro-row"><div><h2>Suivi pédagogique</h2><p>Suivez les progressions, les retards et les besoins d'accompagnement.</p></div><button class="btn btn-primary" id="addPed">＋ Ajouter un suivi</button></div>
+ <div id="pedList" class="item-list"></div>
+</section>
+<section id="view-agenda" class="view">
+ <div class="intro-row"><div><h2>Agenda & rappels</h2><p>Vos échéances professionnelles et rappels personnels.</p></div><button class="btn btn-primary" id="addEvent">＋ Ajouter un rappel</button></div>
+ <div id="agendaList" class="item-list"></div>
+ <article class="panel wellbeing"><h3>Rappel personnel quotidien</h3><p>Pause déjeuner à 12 h 30. Vous pouvez aussi noter une pause ou un rendez-vous personnel.</p><button class="btn btn-green" data-meal="yes">J'ai déjà déjeuné aujourd'hui</button></article>
+</section>
+<section id="view-rapports" class="view">
+ <div class="intro-row"><div><h2>Rapports & synthèses</h2><p>Préparez vos réponses aux demandes de l'autorité hiérarchique.</p></div></div>
+ <div class="report-grid"><button class="report-card" data-report="personnel"><b>♙ Situation du personnel</b><span>Effectifs, fonctions et qualifications</span></button><button class="report-card" data-report="apprenants"><b>▤ Situation des apprenants</b><span>Filières, niveaux et répartition par sexe</span></button><button class="report-card" data-report="daily"><b>◷ Rapport de direction</b><span>Activités, instructions et points en attente</span></button><button class="report-card" data-report="pending"><b>✉ Suivi des courriers</b><span>Délais, responsables et statuts</span></button></div>
+ <article class="panel"><div class="panel-head"><div><h3>Rapport préparé</h3><p id="reportCaption">Choisissez un type de rapport ci-dessus.</p></div><button class="btn btn-primary" id="downloadReport" disabled>Télécharger en .txt</button></div><pre id="reportOutput" class="report-output">Votre rapport apparaîtra ici.</pre></article>
+ <article class="panel"><h3>Sauvegarde des données</h3><p>Exportez régulièrement une copie de vos données. Dans cette version, les données restent sur cet appareil.</p><div class="choice-row"><button class="btn btn-light" id="backup">Exporter la sauvegarde</button><label class="btn btn-outline upload-btn">Importer une sauvegarde<input type="file" id="restore" accept=".json"></label></div></article>
+</section>
+<footer>CFP NDOULO MANAGER <span>· Assistant personnel de direction</span></footer>
+</main></div>
+<dialog id="modal"><form method="dialog" id="modalForm"><div class="modal-head"><h3 id="modalTitle">Ajouter</h3><button class="icon-btn" value="cancel" aria-label="Fermer">×</button></div><div id="modalBody"></div><div class="modal-actions"><button class="btn btn-light" value="cancel">Annuler</button><button class="btn btn-primary" id="modalSave" value="default">Enregistrer</button></div></form></dialog>
+<div id="toast" role="status"></div>
+<script src="app.js"></script>
+</body></html>
